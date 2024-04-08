@@ -3,6 +3,7 @@
 # dependencies
 venv/
 /frontend/node_modules
+/videos
 /.pnp
 .pnp.js
 

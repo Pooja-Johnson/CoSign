@@ -1,5 +1,7 @@
-from flask import Flask,request,jsonify
+from flask import Flask,request,jsonify, send_file
+from pose_estimation_main import generate_final_video
 import spacy
+import os
 # Note:
 # eg."didnt you do that": you that do not   ====>  as 'not' came before the verb (in last), last was not empty and so verb got appended to first
 # To be done : adj-noun => noun-adj
@@ -48,24 +50,27 @@ def glossify(text):
       first.append(token.lemma_)
 
   first+=last
-  print(*first)
-  print([(token.lemma_,token.pos_,token.dep_) for token in doc])
-  return (first)
+  # print([(token.lemma_,token.pos_,token.dep_) for token in doc])
+  return (" ".join(first).title()) # title case for webscraping
 
  
-# Initializing flask app
 app = Flask(__name__)
  
- 
+
 @app.route('/process', methods=['POST'])
 def process_sentence():
     data = request.json
     sentence = data['sentence']
-    
-    processed_sentence = glossify(sentence)  
-    return jsonify({'processed_sentence': processed_sentence})
+    processed_sentence = glossify(sentence) 
+    video_path = generate_final_video(processed_sentence)
+    return jsonify({'videoPath': video_path, 'gloss': processed_sentence })
 
-     
-# Running app
+@app.route('/videos/<filename>')
+def serve_video(filename):
+    videos_path = os.path.join(os.path.dirname(__file__), '..', 'videos',filename)
+    return send_file(videos_path, mimetype='video/mp4')
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)

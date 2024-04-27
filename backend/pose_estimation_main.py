@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Pose Estimation Main
 
 Colab: https://colab.research.google.com/drive/1tzw4OlQYwsH00e6w_lAuc24ygW7UH2ul
@@ -79,9 +78,9 @@ def generate_pose_video(word):
     fps = int(cap.get(cv2.CAP_PROP_FPS))
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    output_path = "./videos/pose_" + word + ".mp4"
+    output_path = "./videos/words_pose/" + word + ".mp4"
     fourcc = cv2.VideoWriter_fourcc(*'avc1') # avc1 to avoid codex error change to 'mp4v' if not needed
-    out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
+    out = cv2.VideoWriter(output_path, fourcc, fps, (width ,height))
 
     # Initialize MediaPipe Holistic model
     mp_holistic = mp.solutions.holistic
@@ -110,21 +109,22 @@ def generate_pose_video(word):
             total_x = 0
             total_y = 0
             num_landmarks = 0
-            for landmark in results.pose_landmarks.landmark:
-                if landmark.visibility > 0:
-                    landmark_x = landmark.x * width
-                    landmark_y = landmark.y * height
-                    total_x += landmark_x
-                    total_y += landmark_y
-                    num_landmarks += 1
-            if num_landmarks > 0:
-                centre_x = total_x / num_landmarks
-                centre_y = total_y / num_landmarks
-            else:
-                centre_x = width / 2
-                centre_y = height / 2
-            all_center_x.append(centre_x)
-            all_center_y.append(centre_y)
+            if results.pose_landmarks:
+                for landmark in results.pose_landmarks.landmark:
+                    if landmark.visibility > 0:
+                        landmark_x = landmark.x * width
+                        landmark_y = landmark.y * height
+                        total_x += landmark_x
+                        total_y += landmark_y
+                        num_landmarks += 1
+                if num_landmarks > 0:
+                    centre_x = total_x / num_landmarks
+                    centre_y = total_y / num_landmarks
+                else:
+                    centre_x = width / 2
+                    centre_y = height / 2
+                all_center_x.append(centre_x)
+                all_center_y.append(centre_y)
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
@@ -132,20 +132,18 @@ def generate_pose_video(word):
         # The final center of the whole pose sequence for each word      
         final_center_x = sum(all_center_x)/len(all_center_x)
         final_center_y = sum(all_center_y)/len(all_center_y)
-        print("centre x: ",final_center_x)
-        print("centre y: ",final_center_y)
-
+    
         # The displacement of the pose sequence from the center area of the frame
         displacement_x = 0.5 * width - final_center_x
         displacement_y = 0.75 * height - final_center_y
-        print("disp x:",displacement_x)
-        print("disp y:",displacement_y)
+        
 
         # Normalization by adding the required displacement
         for result in all_pose_info:
-            for landmark in result.pose_landmarks.landmark:
-                landmark.x =(landmark.x * width + displacement_x)/ width
-                # landmark.y =(landmark.y*height+displacement_y)/height   # Seems better without y-axis normalization
+            if result.pose_landmarks:
+                for landmark in result.pose_landmarks.landmark:
+                    landmark.x =(landmark.x * width + displacement_x)/ width
+                    # landmark.y =(landmark.y*height+displacement_y)/height   # Seems better without y-axis normalization
             if result.right_hand_landmarks:
                 for landmark in result.right_hand_landmarks.landmark:
                     landmark.x =(landmark.x * width + displacement_x)/ width
@@ -165,14 +163,17 @@ def generate_pose_video(word):
             mp_drawing.draw_landmarks(all_black_image[i], frame_result.left_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
             mp_drawing.draw_landmarks(all_black_image[i], frame_result.pose_landmarks, mp_holistic.POSE_CONNECTIONS,landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
             out.write(all_black_image[i])
+            
             i+=1
 
     cap.release()
     out.release()
     print("Pose video saved successfully for word:", word)
+    print("Deleting original video")
+    os.remove("./videos/" + downloaded_video_path)
     return output_path
 
-def join_videos(video_paths, output_path):
+def join_videos(video_paths, output_path, mode):
 
     videos = [cv2.VideoCapture(path) for path in video_paths]
     fps = int(videos[0].get(cv2.CAP_PROP_FPS))
@@ -186,7 +187,16 @@ def join_videos(video_paths, output_path):
             ret, frame = videos[i].read()
             if not ret:
                 break
+            frame = cv2.resize(frame,(width ,height)) # Resize each frame to a common dimension
+
+            # Text overlay on frame
+            if mode=="letter":
+                cv2.putText(frame,video_paths[i][-5], (60, 200), cv2.FONT_HERSHEY_SIMPLEX, 1.7, (255, 255, 255), 2) # based on folder and file naming
+            else:
+                cv2.putText(frame,video_paths[i][20:-4], (50, 100), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 2)
+
             out.write(frame)
+
     for video in videos:
         video.release()
     out.release()
@@ -196,11 +206,28 @@ def join_videos(video_paths, output_path):
 def generate_final_video(sentence):
     sentence = sentence.title()
     words = sentence.split()
-    
+
     # Pose video for each word
-    video_paths = [generate_pose_video(word) for word in words]
-    video_paths = [path for path in video_paths if path] # To remove None
+    video_paths = []
+    for word in words:
+        pose_files = [ file for file in os.listdir("./videos/words_pose") ]
+        if not word.isalnum(): # Do nothing for special characters
+            continue 
+        elif word+".mp4" in pose_files or word.upper()+".mp4" in pose_files:
+            video_path = "./videos/words_pose/"+ word + ".mp4"
+            print("Pose Video Available :", video_path)
+        else:
+            video_path = generate_pose_video(word)
+
+        # Finger-spell each letter of word if no video is found
+        if not video_path:
+            print("Fingerspelling word: ",word)
+            letter_paths = ["./videos/alphanums_pose/"+letter.upper()+".mp4" for letter in word]
+            video_path = "./videos/words_pose/"+ word.upper() + ".mp4"
+            join_videos(letter_paths, video_path, mode="letter")
+    
+        video_paths.append(video_path)
     final_video_url = "./videos/"+sentence+".mp4"
 
-    join_videos(video_paths,final_video_url)
+    join_videos(video_paths, final_video_url, mode="words")
     return final_video_url

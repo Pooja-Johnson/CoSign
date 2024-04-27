@@ -1,6 +1,8 @@
 
 import React, { useState } from "react";
 import './App.css';
+import HomePage from './pages/Homepage/Homepage';
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 
 function VideoComponent({ videoPath, gloss }) {
   return (
@@ -51,7 +53,13 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
+      <BrowserRouter>
+        <Routes>
+        <Route path='/' element={<HomePage/>}/>
+
+        </Routes>
+      </BrowserRouter>
+      {/* <header className="App-header">
         <h1>Text to Video</h1>
         <form onSubmit={handleSubmit}>
           <label>
@@ -68,7 +76,7 @@ function App() {
         {console.log('Video path:', videoPath)}
 
         {videoPath && < VideoComponent videoPath={videoPath} gloss={gloss} />}
-      </header>
+      </header> */}
     </div>
 
   );

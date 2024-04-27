@@ -3,7 +3,6 @@
 # dependencies
 venv/
 /frontend/node_modules
-/videos
 /.pnp
 .pnp.js
 __pycache__

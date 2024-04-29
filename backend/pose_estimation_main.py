@@ -1,9 +1,3 @@
-"""Pose Estimation Main
-
-Colab: https://colab.research.google.com/drive/1tzw4OlQYwsH00e6w_lAuc24ygW7UH2ul
-
-"""
-
 import cv2
 import mediapipe as mp
 import numpy as np
@@ -178,10 +172,9 @@ def join_videos(video_paths, output_path, mode):
     videos = [cv2.VideoCapture(path) for path in video_paths]
     fps = int(videos[0].get(cv2.CAP_PROP_FPS))
     width = 1000
-    height = 600
+    height = 565
     fourcc = cv2.VideoWriter_fourcc(*'avc1') # avc1 to avoid codec error change to 'mp4v' if not needed
     out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
-
     for i in range(len(video_paths)):
         while videos[i].isOpened():
             ret, frame = videos[i].read()
@@ -209,8 +202,9 @@ def generate_final_video(sentence):
 
     # Pose video for each word
     video_paths = []
+    pose_files = [ file for file in os.listdir("./videos/words_pose") ]
     for word in words:
-        pose_files = [ file for file in os.listdir("./videos/words_pose") ]
+       
         if not word.isalnum(): # Do nothing for special characters
             continue 
         elif word+".mp4" in pose_files or word.upper()+".mp4" in pose_files:

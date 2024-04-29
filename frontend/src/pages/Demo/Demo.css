@@ -1,17 +1,17 @@
-.landing-header{
-    margin:0px;
+.landing-header {
+    margin: 0px;
     color: #cdb4db;
 }
 
-.heading-demo{
+.heading-demo {
     font-size: 3rem;
     display: flex;
     justify-content: center;
-    color:#FFFFFF; 
+    color: #FFFFFF;
     margin-top: 3rem;
 }
 
-.demo-row{
+.demo-row {
     display: flex;
     justify-content: center;
     /* margin: 2rem;
@@ -23,21 +23,23 @@ body {
     padding: 0;
 }
 
-.heading-caption-demo{
+.heading-caption-demo {
     font-size: 2rem;
     color: #FFFFFF;
     display: flex;
     margin-top: 3rem;
     justify-content: center;
 }
-.explain-demo{
+
+.explain-demo {
     /* display:flex; */
     justify-content: center;
-    color:white;
-    font-size:35px;
-    margin-top:1rem ;
+    color: white;
+    font-size: 35px;
+    margin-top: 1rem;
 }
-.demo-main{
+
+.demo-main {
     margin-top: 0px;
     height: 100vh;
     background-color: #8C6AA0;
@@ -51,4 +53,90 @@ body {
     background-image: url(C:\Users\navya\CoSign_v1\frontend\src\pages\Homepage\12.jpg);
     background-size: cover;
     background-position: center;
+}
+
+
+/* Microphone CSS */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+}
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+    background-color: #8C6AA0;
+}
+
+.mircophone-container {
+    display: flex;
+    justify-content: center;
+
+}
+
+.microphone-icon-container {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-image: linear-gradient(128deg, #ffffff, #f3e2f0);
+    padding: 20px;
+    margin-right: 20px;
+    position: relative;
+    cursor: pointer;
+}
+
+.microphone-icon-container.listening::before {
+    content: "";
+    width: 60px;
+    height: 60px;
+    background-color: #ffffff81;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1.4);
+    border-radius: 50%;
+    animation: listening infinite 1.5s;
+}
+
+@keyframes listening {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.4);
+    }
+}
+
+.microphone-icon {
+    width: 100%;
+    height: 100%;
+
+}
+
+.microphone-status {
+    font-size: 18px;
+    margin-right: 15px;
+    margin-top: 15px;
+}
+
+
+.microphone-result-container {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 30px;
+
+}
+
+.microphone-result-text {
+    margin-bottom: 15px;
+    overflow-y: auto;
 }

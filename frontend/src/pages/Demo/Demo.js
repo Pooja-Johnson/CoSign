@@ -41,8 +41,6 @@ const CssTextField = styled(TextField)({
   },
 });
 
-
-
 const Demo = () => {
   const [sentence, setSentence] = useState('');
   const [gloss, setGloss] = useState('');
@@ -135,6 +133,7 @@ const Demo = () => {
   console.log('Component re-rendered. Video path:', videoPath);
   return (
     <div className='demo-main'>
+
       {/* <header className="App-header"> */}
       {/* <h1 className='landing-header'>CoSign</h1> */}
       {!videoPath && < iframe

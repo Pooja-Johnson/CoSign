@@ -21,16 +21,17 @@ const Homepage = () => {
   return (
     <div>
       <div className='landing_main_page'>
-        <h1 className='landing-header'>CoSign</h1>
+        <h1 className='landing-header'>.</h1>
         <span className='heading'>CoSign </span>
         <p className='heading-caption'>Bridging Words to Motion. Transforming Text into Sign Language</p>
         {/* <p className='cap2'>CoSign effortlessly translates your thoughts into expressive sign language, enabling seamless communication with loved ones and peers.</p> */}
-        <Button className='Button' onClick={() => gotToNewPage()} variant="contained" size='large' endIcon={<SignLanguage />}
+        <Button className='button' onClick={() => gotToNewPage()} variant="contained" size='large' endIcon={<SignLanguage />}
           sx={{
-            margin: 25,
+            marginRight:'65rem',
+            marginTop:'3rem',
             height: 50,
             width: 300,
-            backgroundColor: purple[400],
+            backgroundColor: purple[300],
             '&:hover': {
               backgroundColor: purple[700],
             },
@@ -51,7 +52,7 @@ const Homepage = () => {
                 sx={{ height: 300 }}
                 component="img"
                 height="140"
-                src="./static/isl.jpg"
+                src="./static/love.jpg"
                 alt="ISL"
               />
 
@@ -70,12 +71,13 @@ const Homepage = () => {
               maxWidth: 345, margin: 4,
             }}>
             <CardActionArea>
-              {/* <CardMedia
+              <CardMedia
+            sx={{ height: 300 }}
           component="img"
           height="140"
-          image="/static/
-          alt="green iguana"
-        /> */}
+          src="./static/aud3.jpg"
+          alt="Audio to text"
+        />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
                   Audio and Text input
@@ -91,12 +93,13 @@ const Homepage = () => {
               maxWidth: 345, margin: 4
             }}>
             <CardActionArea>
-              {/* <CardMedia
+              <CardMedia
+          sx={{ height: 300 }}
           component="img"
           height="140"
-          image="/static/images/cards/contemplative-reptile.jpg"
-          alt="green iguana"
-        /> */}
+          image="/static/play.jpg"
+          alt="Playback controls"
+        />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
                   You have the control

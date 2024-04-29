@@ -1,19 +1,17 @@
 import './App.css';
 import Homepage from './pages/Homepage/Homepage';
 import Demo from './pages/Demo/Demo';
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
 
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        {/* <nav>
-            <ul>
-              <li><Link to="/">Dashboard</Link></li>
-              <li><Link to="/employee">Employee</Link></li>
-              <li><Link to="/customer">Customer</Link></li>
-            </ul>
-          </nav> */}
+        <nav>
+              <Link to="/">ABOUT</Link>
+              <Link to="/demo">FEATURES</Link>
+              <Link to="/demo">EXPLORE</Link>
+          </nav>
         <Routes>
           <Route path='/' element={<Homepage />} />
           <Route path='/demo' element={<Demo />} />

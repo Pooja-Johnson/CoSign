@@ -60,7 +60,8 @@
     align-items: flex-start; /* Align items to the start of the cross axis (vertical) */
     /* min-height: 100vh; */
     width: 100vw;
-    background-image: url("C:\Users\navya\Downloads\pexels-shvetsa-4672717.jpg");
+    /* background-image: url("C:\Users\navya\Downloads\pexels-shvetsa-4672717.jpg"); */
+    background-image: url("C:\Users\navya\Downloads\istockphoto-1365149257-1024x1024.jpg");
     background-size: cover;
     background-position: center;
     /* max-width: 100%;
@@ -111,3 +112,16 @@ body {
     padding-top: "50%";
     height:140,
   }
+
+.footer{
+    /* background-color: #AE86C6; */
+    background-image: url("C:\Users\navya\Downloads\pexels-shvetsa-4672717.jpg");
+    background-size:cover ;
+    height: 25vh;
+    margin-top: 0rem;
+}
+
+.footer-text{
+    color: #cdb4db;
+    margin-top: 2rem;
+}

@@ -177,8 +177,8 @@ def join_videos(video_paths, output_path, mode):
 
     videos = [cv2.VideoCapture(path) for path in video_paths]
     fps = int(videos[0].get(cv2.CAP_PROP_FPS))
-    width = int(videos[0].get(cv2.CAP_PROP_FRAME_WIDTH))
-    height = int(videos[0].get(cv2.CAP_PROP_FRAME_HEIGHT))
+    width = 1000
+    height = 600
     fourcc = cv2.VideoWriter_fourcc(*'avc1') # avc1 to avoid codec error change to 'mp4v' if not needed
     out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
 

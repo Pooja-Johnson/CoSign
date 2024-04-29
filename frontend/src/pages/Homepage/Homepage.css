@@ -19,14 +19,15 @@
     margin: 10px;
 } */
 
-.heading{
+.heading {
     font-size: 5rem;
     display: flex;
-    color:#8C6AA0; 
+    color: #8C6AA0;
     margin-left: 6rem;
     margin-top: 7rem;
 }
-.heading-caption{
+
+.heading-caption {
     font-size: 2rem;
     color: #AE86C6;
     display: flex;
@@ -43,25 +44,27 @@
     /* margin-left: 6rem; 
 } */
 
-.explain{
+.explain {
     /* display:flex; */
     justify-content: center;
-    color:white;
-    font-size:35px;
+    color: white;
+    font-size: 35px;
     padding-top: 8rem;
     margin: 3rem;
-    margin-top:0px;
+    margin-top: 0px;
 }
+
 .landing_main_page {
     /* display: flex; */
     margin: 0px;
-    top:0px;
+    top: 0px;
     justify-content: left;
-    align-items: flex-start; /* Align items to the start of the cross axis (vertical) */
+    align-items: flex-start;
+    /* Align items to the start of the cross axis (vertical) */
     /* min-height: 100vh; */
     width: 100vw;
     /* background-image: url("C:\Users\navya\Downloads\pexels-shvetsa-4672717.jpg"); */
-    background-image: url("C:\Users\navya\Downloads\istockphoto-1365149257-1024x1024.jpg");
+    /* background-image: url("C:\Users\navya\Downloads\istockphoto-1365149257-1024x1024.jpg"); */
     background-size: cover;
     background-position: center;
     /* max-width: 100%;
@@ -71,7 +74,9 @@
     display: block;
 }
 
-.second-part{
+
+.second-part {
+
     height: 100vh;
     margin-top: 0px;
     background-color: #8C6AA0;
@@ -79,7 +84,9 @@
     background-position: center;
 }
 
-.card-container{
+
+.card-container {
+
     display: flex;
     justify-content: center;
     /* margin-top: 10rem; */
@@ -100,28 +107,29 @@ body {
     margin: 0;
     padding: 0;
     /* background-color: #fce6f3; */
-    
 }
 
-.landing-header{
-    margin:0px;
+.landing-header {
+    margin: 0px;
     color: #cdb4db;
 }
 
-.cardMediaStyle{
+.cardMediaStyle {
     padding-top: "50%";
-    height:140,
-  }
+    height: 140,
+}
 
-.footer{
+.footer {
     /* background-color: #AE86C6; */
-    background-image: url("C:\Users\navya\Downloads\pexels-shvetsa-4672717.jpg");
-    background-size:cover ;
+    /* background-image: url("C:\Users\navya\Downloads\pexels-shvetsa-4672717.jpg"); */
+    background-size: cover;
     height: 25vh;
     margin-top: 0rem;
 }
 
-.footer-text{
+
+.footer-text {
     color: #cdb4db;
     margin-top: 2rem;
 }
+

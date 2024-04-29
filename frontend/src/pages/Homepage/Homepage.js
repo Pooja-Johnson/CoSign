@@ -14,8 +14,8 @@ import { useNavigate } from 'react-router-dom';
 const Homepage = () => {
 
   const navigate = useNavigate()
-  const gotToNewPage=()=>{
-    navigate("/video");
+  const gotToNewPage = () => {
+    navigate("/demo");
   }
 
   return (
@@ -48,7 +48,7 @@ const Homepage = () => {
             }}>
             <CardActionArea>
               <CardMedia
-                sx={{ height: 300}}
+                sx={{ height: 300 }}
                 component="img"
                 height="140"
                 src="./static/isl.jpg"

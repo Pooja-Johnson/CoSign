@@ -8,38 +8,36 @@ import TextField from '@mui/material/TextField';
 
 
 function VideoComponent({ videoPath, gloss }) {
-    return (
-      <div>
-        <p>Gloss: {gloss}</p>
-        <h2>Pose Video:</h2>
-        <video key={videoPath} controls>
-          <source src={videoPath} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-      </div>
-    );
-  }
+  return (
+    <div>
+      <video key={videoPath} controls>
+        <source src={videoPath} type="video/mp4" width="1000"
+          height="600" title={gloss} />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  );
+}
 
 const CssTextField = styled(TextField)({
-'& label.Mui-focused': {
+  '& label.Mui-focused': {
     color: '#FFFFFF',
-},
-'& .MuiInput-underline:after': {
+  },
+  '& .MuiInput-underline:after': {
     borderBottomColor: '#FFFFFF',
-},
-'& .MuiOutlinedInput-root': {
+  },
+  '& .MuiOutlinedInput-root': {
     '& fieldset': {
-    borderColor: '#FFFFFF',
+      borderColor: '#FFFFFF',
     },
     '&:hover fieldset': {
-    borderColor: '#FFFFFF',
+      borderColor: '#FFFFFF',
     },
     '&.Mui-focused fieldset': {
-    borderColor: '#FFFFFF',
+      borderColor: '#FFFFFF',
     },
-},
+  },
 });
-  
 
 const Demo = () => {
   const [sentence, setSentence] = useState('');
@@ -76,40 +74,48 @@ const Demo = () => {
   console.log('Component re-rendered. Video path:', videoPath);
   return (
     <div className='demo-main'>
-        {/* <header className="App-header"> */}
-        {/* <h1 className='landing-header'>CoSign</h1> */}
-        <iframe 
-          width="1000"
-          height="600"
-          src={videoPath}
-          title="Selected Video"
-          allowFullScreen
-        ></iframe>
-        {videoPath && < VideoComponent videoPath={videoPath} gloss={gloss} />}
-        {/* <h1 className='heading-demo'>Enter text to be converted</h1> */}
-        <form onSubmit={handleSubmit}>
-          <div className='demo-row'>
-          {/* <p className='explain-demo'>Input: </p> */}
-          <CssTextField label="Enter text to translate :)" id="custom-css-outlined-input" sx={{margin:2, width:800}}/>
-          <Button type='submit' className='Button' variant="contained" size='large' 
-          sx={{
-            margin: 2,
-            color: purple[700],
-            height: 55,
-            backgroundColor: 'white',
-            '&:hover': {
-              backgroundColor: purple[700],
-              color:'white',
-            },
-          }}>
-          Explore
-        </Button>
-        </div>
-        </form>
-        {error && <p className="error">{error}</p>}
-        {console.log('Video path:', videoPath)}
+    
+      {/* <header className="App-header"> */}
+      {/* <h1 className='landing-header'>CoSign</h1> */}
 
-        
+      {!videoPath && < iframe
+        width="1000"
+        height="600"
+        src={videoPath}
+        title="Selected Video"
+        allowFullScreen
+      ></iframe>}
+
+      {videoPath && < VideoComponent videoPath={videoPath} gloss={gloss} />}
+
+      {/* <h1 className='heading-demo'>Enter text to be converted</h1> */}
+      <form onSubmit={handleSubmit}>
+        <div className='demo-row'>
+          {/* <p className='explain-demo'>Input: </p> */}
+
+          <CssTextField label="Enter text to translate :)"
+            id="custom-css-outlined-input"
+            sx={{ margin: 2, width: 800 }}
+            onChange={(e) => setSentence(e.target.value)} />
+
+          <Button type='submit' className='Button' variant="contained" size='large'
+            sx={{
+              margin: 2,
+              color: purple[700],
+              height: 55,
+              backgroundColor: 'white',
+              '&:hover': {
+                backgroundColor: purple[700],
+                color: 'white',
+              },
+            }}>
+            Explore
+          </Button>
+        </div>
+      </form>
+      {error && <p className="error">{error}</p>}
+      {console.log('Video path:', videoPath)}
+       
       {/* </header> */}
     </div>
   )

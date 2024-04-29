@@ -8,9 +8,16 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 
 const Homepage = () => {
+
+  const navigate = useNavigate()
+  const gotToNewPage=()=>{
+    navigate("/video");
+  }
+
   return (
     <div>
       <div className='landing_main_page'>
@@ -18,7 +25,7 @@ const Homepage = () => {
         <span className='heading'>CoSign </span>
         <p className='heading-caption'>Bridging Words to Motion. Transforming Text into Sign Language</p>
         {/* <p className='cap2'>CoSign effortlessly translates your thoughts into expressive sign language, enabling seamless communication with loved ones and peers.</p> */}
-        <Button className='Button' variant="contained" size='large' endIcon={<SignLanguage />}
+        <Button className='Button' onClick={() => gotToNewPage()} variant="contained" size='large' endIcon={<SignLanguage />}
           sx={{
             margin: 25,
             height: 50,
@@ -41,7 +48,7 @@ const Homepage = () => {
             }}>
             <CardActionArea>
               <CardMedia
-                sx={{ height: 140 }}
+                sx={{ height: 300}}
                 component="img"
                 height="140"
                 src="./static/isl.jpg"
@@ -103,6 +110,10 @@ const Homepage = () => {
         </div>
 
       </div>
+      <footer className="footer">
+        <h1 className="landing-header">CoSign </h1>
+        <p className='footer-text'>Made with love by Group A10, CSA 2024</p>
+      </footer>
     </div>
   )
 }

@@ -1,62 +1,25 @@
-
-import React, { useState } from "react";
 import './App.css';
-import HomePage from './pages/Homepage/Homepage';
+import Homepage from './pages/Homepage/Homepage';
+import Demo from './pages/Demo/Demo';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
+import VideoScreen from '../../../Video/VideoScreen';
 
-function VideoComponent({ videoPath, gloss }) {
-  return (
-    <div>
-      <p>Gloss: {gloss}</p>
-      <h2>Pose Video:</h2>
-      <video key={videoPath} controls>
-        <source src={videoPath} type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
-    </div>
-  );
-}
 
 function App() {
-  const [sentence, setSentence] = useState('');
-  const [gloss, setGloss] = useState('');
-  const [videoPath, setVideoPath] = useState('');
-  const [error, setError] = useState('');
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    fetch('/process', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ sentence })
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Failed to process sentence');
-        }
-        return response.json();
-      })
-      .then(data => {
-        setVideoPath(data.videoPath);
-        setGloss(data.gloss)
-        setError('');
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        setVideoPath('');
-        setError('Failed to process sentence. Please try again.');
-      });
-  };
-  console.log('Component re-rendered. Video path:', videoPath);
-
   return (
     <div className="App">
       <BrowserRouter>
+        {/* <nav>
+            <ul>
+              <li><Link to="/">Dashboard</Link></li>
+              <li><Link to="/employee">Employee</Link></li>
+              <li><Link to="/customer">Customer</Link></li>
+            </ul>
+          </nav> */}
         <Routes>
-        <Route path='/' element={<HomePage/>}/>
-
+        <Route path='/' element={<Homepage/>}/>
+        <Route path='/demo' element={<Demo/>}/>
+        <Route path='/video' element={<VideoScreen/>}/>
         </Routes>
       </BrowserRouter>
       {/* <header className="App-header">

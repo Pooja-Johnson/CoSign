@@ -77,8 +77,9 @@ const Demo = () => {
     
       {/* <header className="App-header"> */}
       {/* <h1 className='landing-header'>CoSign</h1> */}
-
+      <br/> 
       {!videoPath && < iframe
+        margin="3"
         width="1000"
         height="600"
         src={videoPath}

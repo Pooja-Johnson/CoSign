@@ -42,8 +42,13 @@ body {
     height: 100vh;
     background-color: #8C6AA0;
     /* background-image: linear-gradient(to right, #300063, #5c0005); */
-    /* background-image: linear-gradient(to bottom, #8C6AA0, #AE86C6, #FFFFFF); */
+     /* background-image: linear-gradient(to bottom, #8C6AA0, #AE86C6, #FFFFFF);  */
     /* background-color: #AE86C6; */
+    /* background-image: url("C:\Users\navya\Downloads\pexels-shvetsa-4672717.jpg"); */
+    /* background-image: url(C:\Users\navya\CoSign_v1\frontend\src\pages\Homepage\6.jpg); */
+    /* background-image: url("C:\Users\navya\Downloads\hands2bw.jpg"); */
+    /* background-image: url("C:\Users\navya\Downloads\h2.jpg"); */
+    background-image: url(C:\Users\navya\CoSign_v1\frontend\src\pages\Homepage\12.jpg);
     background-size: cover;
     background-position: center;
 }

@@ -74,7 +74,9 @@
     display: block;
 }
 
+
 .second-part {
+
     height: 100vh;
     margin-top: 0px;
     background-color: #8C6AA0;
@@ -82,12 +84,13 @@
     background-position: center;
 }
 
+
 .card-container {
+
     display: flex;
     justify-content: center;
     /* margin-top: 10rem; */
 }
-
 /* 
 .landing-card {
     width: 15rem; 
@@ -104,7 +107,6 @@ body {
     margin: 0;
     padding: 0;
     /* background-color: #fce6f3; */
-
 }
 
 .landing-header {
@@ -125,7 +127,9 @@ body {
     margin-top: 0rem;
 }
 
+
 .footer-text {
     color: #cdb4db;
     margin-top: 2rem;
 }
+

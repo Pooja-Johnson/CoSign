@@ -7,6 +7,9 @@ import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import microPhoneIcon from '../../microphone.svg'
+import thumbsUpIcon from '../../thumbs_up.svg'
+import thumbsDownIcon from '../../thumbs_down.svg'
+import wait from '../../wait501.gif'
 
 
 function VideoComponent({ videoPath, gloss }) {
@@ -46,41 +49,38 @@ const Demo = () => {
   const [gloss, setGloss] = useState('');
   const [videoPath, setVideoPath] = useState('');
   const [error, setError] = useState('');
-
-  const commands = [
-    {
-      command: "open *",
-      callback: (website) => {
-        window.open("http://" + website.split(" ").join(""));
-      },
-    },
-    {
-      command: "change background colour to *",
-      callback: (color) => {
-        document.body.style.background = color;
-      },
-    },
-    {
-      command: "reset",
-      callback: () => {
-        handleReset();
-      },
-    },
-    ,
-    {
-      command: "reset background colour",
-      callback: () => {
-        document.body.style.background = `rgba(0, 0, 0, 0.8)`;
-      },
-    },
-  ];
-  const { transcript, resetTranscript } = useSpeechRecognition({ commands });
+  const { transcript, resetTranscript } = useSpeechRecognition();
   const [isListening, setIsListening] = useState(false);
   const microphoneRef = useRef(null);
 
+  const handleFeedback = (isPositive) => {
+    const feedbackData = {
+      sentence: sentence,
+      gloss: gloss,
+      feedback: isPositive ? 1 : 0
+    };
+    console.log(feedbackData)
+    fetch('/saveFeedback', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(feedbackData),
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to save feedback');
+        }
+        console.log('Feedback saved successfully');
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  };
+
   if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
     return (
-      <div className="mircophone-container">
+      <div className="microphone-container">
         Browser does not Support Speech Recognition.
       </div>
     );
@@ -130,23 +130,73 @@ const Demo = () => {
         setError('Failed to process sentence. Please try again.');
       });
   };
+
+
+
   console.log('Component re-rendered. Video path:', videoPath);
   return (
     <div className='demo-main'>
 
       {/* <header className="App-header"> */}
       {/* <h1 className='landing-header'>CoSign</h1> */}
+      <br />
+      {!videoPath &&
+        < iframe
+          margin="3"
+          width="1000"
+          height="565"
+          src={wait}
+          title="Selected Video"
+          allowFullScreen
+        ></iframe>
+      }
 
-      {!videoPath && < iframe
-        margin="3"
-        width="1000"
-        height="565"
-        src={videoPath}
-        title="Selected Video"
-        allowFullScreen
-      ></iframe>}
 
       {videoPath && < VideoComponent videoPath={videoPath} gloss={gloss} />}
+
+      {/* {videoPath && (
+        <div className="feedback-buttons">
+          <button onClick={() => handleFeedback(true)}>
+            <img src={thumbsUpIcon} alt="thumbs up" />
+          </button>
+          <button onClick={() => handleFeedback(false)}>
+            <img src={thumbsDownIcon} alt="thumbs down" />
+          </button>
+        </div>
+      )} */}
+
+      {videoPath && (
+        <div className="feedback-buttons">
+          <Button className='Button' variant="contained" size='large' onClick={() => handleFeedback(true)}
+            sx={{
+              margin: 2,
+              color: purple[700],
+              height: 30,
+
+              backgroundColor: 'white',
+              '&:hover': {
+                backgroundColor: purple[700],
+                color: 'white',
+              },
+            }}>
+            <img src={thumbsUpIcon} height="18" alt="thumbs up" />
+          </Button>
+          <Button className='Button' variant="contained" size='large' onClick={() => handleFeedback(false)}
+            sx={{
+              margin: 2,
+              color: purple[700],
+              height: 30,
+
+              backgroundColor: 'white',
+              '&:hover': {
+                backgroundColor: purple[700],
+                color: 'white',
+              },
+            }}>
+            <img src={thumbsDownIcon} height="18" alt="thumbs down" />
+          </Button>
+        </div>
+      )}
 
       {/* <h1 className='heading-demo'>Enter text to be converted</h1> */}
       <form onSubmit={handleSubmit}>

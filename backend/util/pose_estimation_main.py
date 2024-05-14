@@ -7,6 +7,10 @@ from pytube import YouTube
 import os, copy
 import langid
 
+cache_dict={}
+count=0
+limit=5 # cache limit
+
 def extract_video_url(html_content, search_word):
     soup = BeautifulSoup(html_content, 'html.parser')
     # Find all divs with class 'col-md-6'
@@ -22,12 +26,13 @@ def extract_video_url(html_content, search_word):
                 h4_text = h4_tag.text.strip()
                 
                 words = h4_text.split()
-                print(words)
+                # print(words)
                 # Check each word for language and match with the search word
                 for word in words:
-                    print(word + " : " + langid.classify(word)[0])
+                    # print(word + " : " + langid.classify(word)[0])
                     if langid.classify(word)[0] == "en":  # Assuming "en" is the language code for English
                         if word == search_word:
+                            print("URL found for word \"",search_word,"\" by Websraping:",video_iframe['src'])
                             return video_iframe['src']
                         else:
                           break
@@ -47,7 +52,8 @@ def download_youtube_video(video_url, output_path):
         stream = yt.streams.get_highest_resolution()
         downloaded_file_path = stream.download(output_path)
         filename = os.path.basename(downloaded_file_path)
-        print("Video downloaded successfully. Filename:", filename)
+        print("Video downloaded successfully.")
+        # print("Video downloaded successfully. Filename:", filename)
         return filename
     
     except Exception as e:
@@ -58,7 +64,7 @@ def generate_pose_video(word):
 
     video_url = get_video_url(word)
     if not video_url:
-        print("Video URL not found for word:", word)
+        print("Video URL not found for word by Webscraping:", word)
         return None
     downloaded_video_path = download_youtube_video(video_url, './videos')
     if not downloaded_video_path:
@@ -146,13 +152,17 @@ def generate_pose_video(word):
                 for landmark in result.left_hand_landmarks.landmark:
                     landmark.x =(landmark.x * width + displacement_x)/ width 
                     # landmark.y =(landmark.y*height+displacement_y)/height  
+            # if result.face_landmarks:
+            #     for landmark in result.face_landmarks.landmark:
+            #         landmark.x =(landmark.x * width + displacement_x)/ width 
+            #         # landmark.y =(landmark.y*height+displacement_y)/height 
             normalized_pose_info.append(result)
         print("Poses have been normalized")
 
         i=0
         for frame_result in normalized_pose_info:
             mp_drawing = mp.solutions.drawing_utils
-            # mp_drawing.draw_landmarks(black_image, normalized_results.face_landmarks, mp_holistic.FACEMESH_CONTOURS, landmark_drawing_spec=None, connection_drawing_spec=mp_drawing_styles.get_default_face_mesh_contours_style())
+            # mp_drawing.draw_landmarks(all_black_image[i], frame_result.face_landmarks, mp_holistic.FACEMESH_CONTOURS, landmark_drawing_spec=None, connection_drawing_spec=mp_drawing_styles.get_default_face_mesh_contours_style())
             mp_drawing.draw_landmarks(all_black_image[i], frame_result.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
             mp_drawing.draw_landmarks(all_black_image[i], frame_result.left_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
             mp_drawing.draw_landmarks(all_black_image[i], frame_result.pose_landmarks, mp_holistic.POSE_CONNECTIONS,landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
@@ -163,7 +173,7 @@ def generate_pose_video(word):
     cap.release()
     out.release()
     print("Pose video saved successfully for word:", word)
-    print("Deleting original video")
+    print("Deleting original downloaded video\n")
     os.remove("./videos/" + downloaded_video_path)
     return output_path
 
@@ -193,12 +203,17 @@ def join_videos(video_paths, output_path, mode):
     for video in videos:
         video.release()
     out.release()
-    print("Videos joined successfully. Output:", output_path)
+    if mode=='letter':
+        print("Fingerspelled Word Video generated. Output:", output_path)
+    else:
+        print("\nFinal Video generated. Output:", output_path,"\n")
 
 
 def generate_final_video(sentence):
+    global count, cache_dict, limit
     sentence = sentence.title()
     words = sentence.split()
+    # print("count: ",count)
 
     # Pose video for each word
     video_paths = []
@@ -207,21 +222,37 @@ def generate_final_video(sentence):
        
         if not word.isalnum(): # Do nothing for special characters
             continue 
-        elif word+".mp4" in pose_files or word.upper()+".mp4" in pose_files:
+
+        elif word+".mp4" in pose_files or word.upper()+".mp4" in pose_files: # cache hit
             video_path = "./videos/words_pose/"+ word + ".mp4"
             print("Pose Video Available :", video_path)
-        else:
+
+        else: # cache miss
             video_path = generate_pose_video(word)
+            count = count + 1
+            cache_dict[word+".mp4"] = count
+            if len(os.listdir("./videos/words_pose")) >= limit: # when cache is already full
+                print("Cache full, removing oldest file")
+                lowest_file = min(cache_dict, key = cache_dict.get)
+                file_path = os.path.join("./videos/words_pose", lowest_file)
+                if os.path.exists(file_path):
+                    os.remove(file_path)
+                    print(f"Removed file: {lowest_file}\n")
+                else:
+                    print(f"File '{lowest_file}' not found in the directory.\n")
+
+                # Remove the corresponding entry from the video_files dictionary
+                del cache_dict[lowest_file]
 
         # Finger-spell each letter of word if no video is found
         if not video_path:
             print("Fingerspelling word: ",word)
             letter_paths = ["./videos/alphanums_pose/"+letter.upper()+".mp4" for letter in word]
             video_path = "./videos/words_pose/"+ word.upper() + ".mp4"
-            join_videos(letter_paths, video_path, mode="letter")
+            join_videos(letter_paths, video_path, mode="letter") #join letters or numbers
     
         video_paths.append(video_path)
     final_video_url = "./videos/"+sentence+".mp4"
 
-    join_videos(video_paths, final_video_url, mode="words")
+    join_videos(video_paths, final_video_url, mode="words") #join words
     return final_video_url
